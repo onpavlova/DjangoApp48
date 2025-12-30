@@ -1,10 +1,11 @@
 📚 Магазин разных товаров - Django Web Application
 Веб-приложение Store
-Реализуется функционал ДЗ 44.
+Реализуется функционал ДЗ 44, 45, 48, 49.
 CRUD через CBV
 Тесты
 Celery и Redis
 Настроен GitHubAction
+Настроен pipline GitLab
 
 🚀 Быстрый старт
 Предварительные требования
@@ -14,8 +15,8 @@ pip (менеджер пакетов Python)
 Установка
 
 Клонирование репозитория
-git clone https://github.com/onpavlova/DjangoApp45.git
-cd DjangoApp45
+git clone https://github.com/onpavlova/DjangoApp48.git
+cd DjangoApp48
 
 Создание виртуального окружения
 python -m venv venv
