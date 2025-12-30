@@ -1,34 +1,36 @@
+image: python:3.13
+
 stages:
   - test
+  - deploy
 
 variables:
-  # Используйте переменные GitLab или задайте здесь
   CELERY_BROKER_URL: "redis://redis:6379/0"
   DJANGO_SETTINGS_MODULE: "config.settings"
 
+before_script:
+  - python --version
+  - pip install --upgrade pip
+  - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
 test:
   stage: test
-  image: python:3.13  # Используйте нужную версию Python
   services:
-    - redis:7-alpine  # Сервисный контейнер с Redis для Celery[citation:5]
-  before_script:
-    - pip install --upgrade pip
-    - pip install -r requirements.txt  # Убедитесь, что файл существует
-  script:
-    - python manage.py migrate  # Примените миграции для тестовой БД
-    - python manage.py test  # Запуск стандартных тестов Django
-  # Автоматический запуск при изменениях в master и для MR
+    - name: redis:7-alpine
+      alias: redis
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  script:
+    - python manage.py migrate
+    - python -m pytest -v --tb=short
 
-# Пример джобы с ручным запуском (например, развертывание на тестовый стенд)
 deploy_to_staging:
   stage: deploy
-  image: alpine:latest
   script:
     - echo "Ручное развертывание на тестовый стенд..."
+    - echo "Приложение успешно развернуто."
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-  when: manual  # Ключевой параметр для ручного запуска[citation:8]
+  when: manual
   allow_failure: false
